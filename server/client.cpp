@@ -1,12 +1,14 @@
 #include "client.h"
 
-Client::Client(QObject *p,qintptr id):QTcpSocket(p){
+Client::Client(qintptr id)
+{
     socketID = id;
-    connectToServer();
+    setSocketDescriptor(socketID);
+    connect(this,&Client::readyRead,this,&Client::receivedata);
 }
 
-void Client::connectToServer()
-{
+Client::Client(QObject *p,qintptr id):QTcpSocket(p){
+    socketID = id;
     setSocketDescriptor(socketID);
     connect(this,&Client::readyRead,this,&Client::receivedata);
 }
@@ -15,9 +17,9 @@ void Client::receivedata()
 {
     QByteArray msg = readAll();
 //------------------------------------------------------------------------------------
-    while(waitForReadyRead(90)){
-        msg += readAll();
-    }
+//    while(waitForReadyRead(90)){
+//        msg += readAll();
+//    }
 //------------------------------------------------------------------------------------
 
 //    qDebug()<<Q_FUNC_INFO<<msg;

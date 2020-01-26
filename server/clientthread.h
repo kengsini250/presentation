@@ -29,6 +29,8 @@ signals:
     void NewCamera(Client*,int);
     void NewDoor(Client*,int);
     void NewPhone(Client*,int);
+
+    void sendExit(qintptr);
 };
 
 #endif // CLIENTTHREAD_H

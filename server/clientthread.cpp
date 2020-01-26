@@ -4,7 +4,7 @@ ClientThread::ClientThread(QObject *parent,int id) : QObject(parent)
 {
     qRegisterMetaType<Data>("Data");
     socketID = id;
-    client = new Client(0,socketID);
+    client = new Client(socketID);
 }
 
 ClientThread::~ClientThread()
@@ -13,11 +13,15 @@ ClientThread::~ClientThread()
 
 void ClientThread::NewClient()
 {
+//    client = new Client(socketID);
     connect(client,&Client::NewCamera,this,&ClientThread::getNewCamera);
     connect(client,&Client::NewDoor,this,&ClientThread::getNewDoor);
     connect(client,&Client::NewPhone,this,&ClientThread::getNewPhone);
     connect(client,&Client::SendToServer,this,&ClientThread::getData);
 
+    connect(client,&QTcpSocket::disconnected,[=]{
+        emit sendExit(socketID);
+    });
 }
 
 void ClientThread::getData(Data d)

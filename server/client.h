@@ -8,6 +8,7 @@ class Client : public QTcpSocket
 {
     Q_OBJECT
 public:
+    Client(qintptr id = -1);
     Client(QObject* p = nullptr,qintptr id = -1);
     qintptr getSocketID(){
         return socketID;
