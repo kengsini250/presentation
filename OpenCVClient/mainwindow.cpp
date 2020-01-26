@@ -6,9 +6,10 @@
 #define START '%'
 #define MID '|'
 #define END '&'
+#define EXIT '$'
 
-//#define ip "127.0.0.1"
-#define ip "10.192.137.101"
+#define ip "127.0.0.1"
+//#define ip "10.192.137.101"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -46,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-
     delete ui;
 }
 
@@ -75,7 +75,7 @@ void MainWindow::video()
 
         tcpClient->write(START + QString::number(pid).toUtf8() + MID + second +END);
 
-        ui->video->setPixmap(QPixmap::fromImage(img));
+//        ui->video->setPixmap(QPixmap::fromImage(img));
     }
     else
         qDebug()<<"No video data !";

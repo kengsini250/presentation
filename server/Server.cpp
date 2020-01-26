@@ -33,10 +33,10 @@ void Server::getData(Data d)
 {
     //qDebug()<<d.data;
     if(d.pid.at(0) == '1'){
-        qDebug()<<Q_FUNC_INFO<<"from camera";
+//        qDebug()<<Q_FUNC_INFO<<"from camera";
 
         if(!PhoneClient.empty()){
-            qDebug()<<Q_FUNC_INFO<<"to phone ----  phone size : "<<PhoneClient.size();
+//            qDebug()<<Q_FUNC_INFO<<"to phone ----  phone size : "<<PhoneClient.size();
             for(auto p = PhoneClient.begin();p!= PhoneClient.end();p++){
                 (*p)->write(d.data);
             }

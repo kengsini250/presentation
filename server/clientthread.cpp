@@ -17,11 +17,12 @@ void ClientThread::NewClient()
     connect(client,&Client::NewDoor,this,&ClientThread::getNewDoor);
     connect(client,&Client::NewPhone,this,&ClientThread::getNewPhone);
     connect(client,&Client::SendToServer,this,&ClientThread::getData);
+
 }
 
 void ClientThread::getData(Data d)
 {
-    qDebug()<<"Client Thread Class : "<<QThread::currentThreadId();
+//    qDebug()<<"Client Thread Class : "<<QThread::currentThreadId();
     emit SendToServer(d);
 }
 

@@ -21,4 +21,5 @@ typedef struct{
 
 void DataFormat(QByteArray data,Data* temp);
 
+
 #endif // DATAFORMAT_H

@@ -14,11 +14,14 @@ void Client::connectToServer()
 void Client::receivedata()
 {
     QByteArray msg = readAll();
+//------------------------------------------------------------------------------------
     while(waitForReadyRead(90)){
         msg += readAll();
     }
+//------------------------------------------------------------------------------------
 
-    //qDebug()<<Q_FUNC_INFO<<msg;
+//    qDebug()<<Q_FUNC_INFO<<msg;
+
     if(msg[0] == PID_HEAD){
 
         QByteArray temp;
