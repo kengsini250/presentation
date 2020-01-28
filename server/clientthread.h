@@ -20,12 +20,12 @@ private:
 public slots:
     void NewClient();
 
-    void getData(Data d);
+    void getData(const Data&);
     void getNewCamera(int i);
     void getNewDoor(int i);
     void getNewPhone(int i);
 signals:
-    void SendToServer(Data);
+    void SendToServer(const Data&);
     void NewCamera(Client*,int);
     void NewDoor(Client*,int);
     void NewPhone(Client*,int);

@@ -8,19 +8,15 @@ class Client : public QTcpSocket
 {
     Q_OBJECT
 public:
-    Client(qintptr id = -1);
-    Client(QObject* p = nullptr,qintptr id = -1);
-    qintptr getSocketID(){
-        return socketID;
-    }
+    Client(qintptr id );
+    ~Client();
 
 private:
     void connectToServer();
     void receivedata();
-    qintptr socketID;
 
 signals:
-    void SendToServer(Data);
+    void SendToServer(const Data&);
     void NewCamera(int);
     void NewDoor(int);
     void NewPhone(int);

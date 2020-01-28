@@ -7,7 +7,8 @@ Server::Server(QMainWindow *p) noexcept:QTcpServer(p)
 }
 
 Server::~Server()
-{}
+{
+}
 
 void Server::incomingConnection(qintptr socketID)
 {
@@ -18,7 +19,6 @@ void Server::incomingConnection(qintptr socketID)
     mythread->start();
 
     connect(mythread,&QThread::finished,newConnection,&QObject::deleteLater);
-
     connect(mythread,&QThread::started,newConnection,&ClientThread::NewClient);
 
     connect(newConnection,&ClientThread::NewCamera,this,&Server::getNewCamera);
@@ -26,21 +26,34 @@ void Server::incomingConnection(qintptr socketID)
     connect(newConnection,&ClientThread::NewPhone,this,&Server::getNewPhone);
     connect(newConnection,&ClientThread::SendToServer,this,&Server::getData);
 
-    connect(newConnection,&ClientThread::sendExit,[=](qintptr _pid){
-        int pid = list.find(_pid).value();
+    connect(newConnection,&ClientThread::sendExit,[=](qintptr socketID){
+        int pid = list.find(socketID).value();
+        emit sendDisconnect(pid,socketID);
         qDebug()<<pid<<" disconnect";
         CameraClient.remove(pid);
         PhoneClient.remove(pid);
         DoorClient.remove(pid);
-        qDebug()<<"Camera : "<<CameraClient.size();
-        qDebug()<<"Door : "<<DoorClient.size();
-        qDebug()<<"Phone : "<<PhoneClient.size();
+        list.remove(pid);
+        display();
     });
 
     qDebug()<<"mainWidget QThread::currentThreadId()=="<<QThread::currentThreadId();
 }
 
-void Server::getData(Data d)
+void Server::display()
+{
+//    qDebug()<<"-----------------------------------";
+//    qDebug()<<"Camera : "<<CameraClient.size();
+//    qDebug()<<"Door : "<<DoorClient.size();
+//    qDebug()<<"Phone : "<<PhoneClient.size();
+//    qDebug()<<"-----------------------------------";
+    emit sendClientCount(
+                CameraClient.size(),
+                PhoneClient.size(),
+                DoorClient.size());
+}
+
+void Server::getData(const Data& d)
 {
     //qDebug()<<d.data;
     if(d.pid.at(0) == '1'){
@@ -87,25 +100,25 @@ void Server::getData(Data d)
 
 void Server::getNewCamera(Client*c,int pid)
 {
-    qDebug()<<"pid : "<<pid<<"             socket : "<<c->getSocketID();
+    emit sendNewClient(pid,c->socketDescriptor());
     CameraClient.insert(pid,c);
-    list.insert(c->getSocketID(),pid);
-    qDebug()<<"Camera : "<<CameraClient.size();
+    list.insert(c->socketDescriptor(),pid);
+    display();
 }
 
 void Server::getNewDoor(Client*c,int pid)
 {
-    qDebug()<<"pid : "<<pid<<"             socket : "<<c->getSocketID();
+    emit sendNewClient(pid,c->socketDescriptor());
     DoorClient.insert(pid,c);
-    list.insert(c->getSocketID(),pid);
-    qDebug()<<"Door : "<<DoorClient.size();
+    list.insert(c->socketDescriptor(),pid);
+    display();
 }
 
 void Server::getNewPhone(Client*c,int pid)
 {
-    qDebug()<<"pid : "<<pid<<"             socket : "<<c->getSocketID();
+    emit sendNewClient(pid,c->socketDescriptor());
     PhoneClient.insert(pid,c);
-    list.insert(c->getSocketID(),pid);
-    qDebug()<<"Phone : "<<PhoneClient.size();
+    list.insert(c->socketDescriptor(),pid);
+    display();
 }
 

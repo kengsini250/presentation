@@ -2,15 +2,13 @@
 
 Client::Client(qintptr id)
 {
-    socketID = id;
-    setSocketDescriptor(socketID);
+    setSocketDescriptor(id);
     connect(this,&Client::readyRead,this,&Client::receivedata);
 }
 
-Client::Client(QObject *p,qintptr id):QTcpSocket(p){
-    socketID = id;
-    setSocketDescriptor(socketID);
-    connect(this,&Client::readyRead,this,&Client::receivedata);
+Client::~Client()
+{
+    this->close();
 }
 
 void Client::receivedata()

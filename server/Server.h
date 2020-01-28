@@ -24,13 +24,27 @@ public:
 protected:
     void incomingConnection(qintptr socketID)override;
 private:
-    QMap<qintptr,Client*> CameraClient,PhoneClient,DoorClient;
-    QMap<qintptr,int> list;
+    QMap<int,Client*> CameraClient,PhoneClient,DoorClient;//<pid,Client>
+    QMap<qintptr,int> list;//<socket,pid>
+
+    void display();
 private slots:
-    void getData(Data d);
+    void getData(const Data&);
     void getNewCamera(Client*,int);
     void getNewDoor(Client*,int);
     void getNewPhone(Client*,int);
+
+signals:
+//      int pid
+//     qintptr socket
+    void sendNewClient(int,qintptr);
+
+//    camera phone door
+    void sendClientCount(int,int,int);
+
+//    int pid
+//    qintptr socket
+    void sendDisconnect(int,qintptr);
 };
 
 #endif // SERVER_H
