@@ -15,9 +15,9 @@ void Client::receivedata()
 {
     QByteArray msg = readAll();
 //------------------------------------------------------------------------------------
-//    while(waitForReadyRead(90)){
-//        msg += readAll();
-//    }
+    while(waitForReadyRead(90)){
+        msg += readAll();
+    }
 //------------------------------------------------------------------------------------
 
 //    qDebug()<<Q_FUNC_INFO<<msg;

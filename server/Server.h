@@ -1,3 +1,14 @@
+/**
+ * @file Server.h
+ * @author oppaiは愛 kengsini250@gmail.com)
+ * @brief 
+ * @version 1.3
+ * @date 2020-01-30
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #ifndef SERVER_H
 #define SERVER_H
 
@@ -24,27 +35,81 @@ public:
 protected:
     void incomingConnection(qintptr socketID)override;
 private:
-    QMap<int,Client*> CameraClient,PhoneClient,DoorClient;//<pid,Client>
+    /*!
+     * @brief <マイコンの標識 , クライアント>
+     * @param int マイコンの標識
+     * @param Client* クライアント
+     */
+    QMap<int,Client*> CameraClient,PhoneClient,DoorClient;
+
+    /*!
+     * @brief <ソケット記述子 , マイコンの標識>
+     * @param qintptr ソケット記述子
+     * @param int マイコンの標識
+     */
     QMap<qintptr,int> list;//<socket,pid>
 
+    //debug
     void display();
+
 private slots:
-    void getData(const Data&);
-    void getNewCamera(Client*,int);
-    void getNewDoor(Client*,int);
-    void getNewPhone(Client*,int);
+    /**
+     * @brief データーの転送　<br>
+     * マイコンの標識によって、<br>
+     * 転送ルールはここで追加します
+     *  @param d 画像データ
+     */
+    void getData(const Data& d);
+
+    /**
+     * @brief getNewCamera <br>
+     * カメラを追加
+     * @param c クライアント
+     * @param pid イコンの標識
+     */
+    void getNewCamera(Client* c,int pid);
+
+    /**
+     * @brief getNewDoor <br>
+     * ドアを追加
+     * @param c クライアント
+     * @param pid イコンの標識
+     */
+    void getNewDoor(Client* c,int pid);
+
+    /**
+     * @brief getNewPhone <br>
+     * スマホを追加
+     * @param c クライアント
+     * @param pid イコンの標識
+     */
+    void getNewPhone(Client* c,int pid);
 
 signals:
-//      int pid
-//     qintptr socket
-    void sendNewClient(int,qintptr);
+    /**
+     * @brief メインUIのアップデート
+     * 
+     * @param pid マイコンの標識
+     * @param socketfd ソケット記述子
+     */
+    void sendNewClient(int pid,qintptr socketfd);
 
-//    camera phone door
-    void sendClientCount(int,int,int);
+    /**
+     * @brief メインUIのアップデート
+     * 
+     * @param cPid つなげているカメラの量
+     * @param pPid つなげているスマホの量
+     * @param dPid つなげているドアの量
+     */
+    void sendClientCount(int cPid,int pPid,int dPid);
 
-//    int pid
-//    qintptr socket
-    void sendDisconnect(int,qintptr);
+    /**
+     * @brief メインUIのアップデート
+     * 
+     * @param pid マイコンの標識
+     * @param socketfd ソケット記述子
+     */
+    void sendDisconnect(int pid,qintptr socketfd);
 };
 
 #endif // SERVER_H
