@@ -1,7 +1,7 @@
 #include "network.h"
 
 #define PID_HEAD '!'
-#define PID 345
+#define PID 346
 
 #define START '%'
 #define MID '|'
@@ -27,9 +27,14 @@ NetWork::NetWork(QObject *parent) : QObject(parent)
     });
 }
 
+void NetWork::getIP(QString str)
+{
+    ip = str;
+}
+
 void NetWork::sendIpPort()
 {
-    tcpClient->connectToHost("192.168.2.175",55555,QTcpSocket::ReadWrite);
+    tcpClient->connectToHost(ip,55555,QTcpSocket::ReadWrite);
 //    tcpClient->connectToHost("10.42.0.1",55555,QTcpSocket::ReadWrite);
     tcpClient->waitForConnected();
     if(tcpClient->state()==QTcpSocket::ConnectedState)
@@ -38,5 +43,6 @@ void NetWork::sendIpPort()
 
 void NetWork::sendToServer(QString str)
 {
+    qDebug()<<"send!";
     tcpClient->write(START+QString::number(PID).toUtf8()+MID+str.toUtf8()+END);
 }

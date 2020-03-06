@@ -23,6 +23,7 @@
 #include "Dataformat.h"
 #include "client.h"
 #include "clientthread.h"
+#include "record.h"
 
 class Server : public QTcpServer
 {
@@ -43,11 +44,20 @@ private:
     QMap<int,Client*> CameraClient,PhoneClient,DoorClient;
 
     /*!
+     * @brief SendToClient
+     * @param client
+     * @param data
+     */
+    void SendToClient(QMap<int,Client*> client , Data d);
+
+    /*!
      * @brief <ソケット記述子 , マイコンの標識>
      * @param qintptr ソケット記述子
      * @param int マイコンの標識
      */
     QMap<qintptr,int> list;//<socket,pid>
+
+    Record *file;
 
     //debug
     void display();

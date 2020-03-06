@@ -22,10 +22,13 @@ class NetWork : public QObject
     Q_OBJECT
 public:
     explicit NetWork(QObject *parent = nullptr);
+    Q_INVOKABLE void getIP(QString str);
     Q_INVOKABLE void sendIpPort();
     Q_INVOKABLE void sendToServer(QString str);
 private:
     QTcpSocket *tcpClient;
+
+    QString ip;
 signals:
     //test
     void pic();

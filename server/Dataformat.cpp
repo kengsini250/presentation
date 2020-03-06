@@ -17,4 +17,6 @@ void DataFormat(QByteArray data, Data*  temp)
             count++;
         }
     }
+
+
 }

@@ -35,15 +35,6 @@ public slots:
      */
     void NewClient();
 
-    /*!
-     * @brief データの転送 <br>
-     * lambdaを使ってもいい
-     */
-    void getData(const Data&);
-    void getNewCamera(int i);
-    void getNewDoor(int i);
-    void getNewPhone(int i);
-
 signals:
     /*!
      * @brief SendToServer <br>

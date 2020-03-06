@@ -47,4 +47,6 @@ void Client::receivedata()
         DataFormat(msg,&data);
         emit SendToServer(data);
     }
+
+    msg.clear();
 }

@@ -2,7 +2,7 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11  console
+CONFIG += c++11  #console
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -21,14 +21,16 @@ SOURCES += \
     client.cpp \
     clientthread.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    record.cpp
 
 HEADERS += \
     Dataformat.h \
     Server.h \
     client.h \
     clientthread.h \
-    mainwindow.h
+    mainwindow.h \
+    record.h
 
 FORMS += \
     mainwindow.ui

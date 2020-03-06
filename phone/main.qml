@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Window 2.1
 import QtQuick.Controls 2.1
 
- import Network.module 1.0
+import Network.module 1.0
 
 Window {
     id: win
@@ -10,10 +10,10 @@ Window {
     width: Screen.width
     height: Screen.height
 
-//    network
-     Network{
-         id:network
-     }
+    //    network
+    Network{
+        id:network
+    }
 
     Image{
         id:img
@@ -65,13 +65,13 @@ Window {
             Connections{
                 target:b_left
                 onClicked:{
-                     network.sendToServer("PL")
+                    network.sendToServer("PL")
                 }
             }
             Connections{
                 target: b_right
                 onClicked:{
-                     network.sendToServer("PR")
+                    network.sendToServer("PR")
                 }
             }
         }
@@ -97,13 +97,13 @@ Window {
             Connections{
                 target:yes
                 onClicked:{
-                     network.sendToServer("DY")
+                    network.sendToServer("DY")
                 }
             }
             Connections{
                 target:no
                 onClicked:{
-                     network.sendToServer("DN")
+                    network.sendToServer("DN")
                 }
             }
         }
@@ -111,20 +111,79 @@ Window {
             x: 0
             y: 112
             width: win.width
-            height: 50
+            height: 30
             Button{
                 id:c
-                x:win.width/2-50
+                x: win.width/4
+                y: 0
                 text:"Connect"
+                font.pointSize: 12
                 width:100
-                height: 50
+                height: 30
             }
+
+            TextInput {
+                id: textInput
+                x: c.x+150
+                y: 0
+                width: 100
+                height: 15
+                text: qsTr("192.168.2.175")
+                verticalAlignment: Text.AlignTop
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: 12
+            }
+
             Connections{
                 target: c
                 onClicked:{
-                     network.sendIpPort()
-
+                    network.getIP(textInput.text)
+                    network.sendIpPort()
                 }
+            }
+
+
+
+        }
+
+        Rectangle {
+            x: 0
+            y: 148
+            width: win.width
+            height: 30
+
+            Connections {
+                target: c1
+            }
+
+            Button {
+                id: sos1
+                x: 183
+                y: 0
+                width: 100
+                height: 30
+                text: qsTr("通報")
+                font.pointSize: 12
+            }
+
+            Button {
+                id: sos2
+                x: 289
+                y: 0
+                width: 100
+                height: 30
+                text: qsTr("警報")
+                font.pointSize: 12
+            }
+
+            Button {
+                id: sos3
+                x: 69
+                y: 0
+                width: 100
+                height: 30
+                text: qsTr("通話")
+                font.pointSize: 12
             }
         }
     }

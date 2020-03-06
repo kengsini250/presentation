@@ -4,10 +4,12 @@
 Server::Server(QMainWindow *p) noexcept:QTcpServer(p)
 {
     listen(QHostAddress::Any,55555);
+    file = new Record("recode.txt");
 }
 
 Server::~Server()
 {
+    delete file;
 }
 
 void Server::incomingConnection(qintptr socketID)
@@ -40,13 +42,22 @@ void Server::incomingConnection(qintptr socketID)
     qDebug()<<"mainWidget QThread::currentThreadId()=="<<QThread::currentThreadId();
 }
 
+void Server::SendToClient(QMap<int, Client *> client,Data d)
+{
+    auto p = client.begin();
+    while(p!=client.end()){
+        p.value()->write(d.data);
+        p++;
+    }
+}
+
 void Server::display()
 {
-//    qDebug()<<"-----------------------------------";
-//    qDebug()<<"Camera : "<<CameraClient.size();
-//    qDebug()<<"Door : "<<DoorClient.size();
-//    qDebug()<<"Phone : "<<PhoneClient.size();
-//    qDebug()<<"-----------------------------------";
+    //    qDebug()<<"-----------------------------------";
+    //    qDebug()<<"Camera : "<<CameraClient.size();
+    //    qDebug()<<"Door : "<<DoorClient.size();
+    //    qDebug()<<"Phone : "<<PhoneClient.size();
+    //    qDebug()<<"-----------------------------------";
     emit sendClientCount(
                 CameraClient.size(),
                 PhoneClient.size(),
@@ -55,45 +66,27 @@ void Server::display()
 
 void Server::getData(const Data& d)
 {
-    //qDebug()<<d.data;
     if(d.pid.at(0) == '1'){
-        //        qDebug()<<Q_FUNC_INFO<<"from camera";
-
-        if(!PhoneClient.empty()){
-            auto p = PhoneClient.begin();
-            while(p!=PhoneClient.end()){
-                p.value()->write(d.data);
-                p++;
-            }
-        }
+        if(!PhoneClient.empty())
+            SendToClient(PhoneClient,d);
     }
 
     if(d.pid.at(0) == '2'){
-        qDebug()<<Q_FUNC_INFO<<"from door";
+        //        qDebug()<<Q_FUNC_INFO<<"from door";
     }
 
     if(d.pid.at(0) == '3'){
-        qDebug()<<Q_FUNC_INFO<<"from phone";
-
         if(!DoorClient.isEmpty()){
-            if(d.data.at(0) == 'D'){
-                qDebug()<<Q_FUNC_INFO<<"to Door";
-                auto p = DoorClient.begin();
-                while(p!=DoorClient.end()){
-                    p.value()->write(d.data);
-                    p++;
-                }
-            }
+            if(d.data.at(0) == 'D')
+                SendToClient(DoorClient,d);
+            //make recode file
+            file->getData(d.data);
         }
-        if(!CameraClient.isEmpty()){
-            if(d.data.at(0) == 'P'){
-                qDebug()<<Q_FUNC_INFO<<"to Camera";
-                auto p = CameraClient.begin();
-                while(p!=CameraClient.end()){
-                    p.value()->write(d.data);
-                    p++;
-                }
-            }
+    }
+    if(!CameraClient.isEmpty()){
+        if(d.data.at(0) == 'P'){
+            qDebug()<<"send to  camera" << d.data;
+            SendToClient(CameraClient,d);
         }
     }
 }
